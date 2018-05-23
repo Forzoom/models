@@ -13,6 +13,7 @@ module.exports = function(config) {
             'spec',
         ],
         files: [
+            '../../node_modules/vue/dist/vue.js',
             '../../dist/models.js',
             './specs/**/*.spec.js',
         ],

@@ -11,7 +11,7 @@ Test._model = {
 
 describe('#test', function() {
 	it('#basic', function() {
-		const test = new Test();
+		var test = new Test();
 
 		expect(test.key1).to.equal('defaultValue');
 		expect(test.key2).to.be.null;
@@ -35,5 +35,23 @@ describe('#test', function() {
 			default: 10,
 		});
 		expect(test.foo).to.equal(10);
+
+		var vm = new Vue({
+			data: function data() {
+				return {
+					test: test,
+				};
+			},
+			computed: {
+				computedValue: function computedValue() {
+					return this.test.fooBar;
+				},
+			},
+		});
+
+		expect(vm.test.foo_bar).to.equal('foo_bar');
+		expect(vm.computedValue).to.equal('foo_bar');
+		vm.test.fooBar = 'value';
+		expect(vm.computedValue).to.equal('value');
 	});
 });
