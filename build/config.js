@@ -1,4 +1,5 @@
 const typescript = require('rollup-typescript');
+const babel = require('rollup-plugin-babel');
 
 module.exports = exports = [
     {
@@ -9,6 +10,9 @@ module.exports = exports = [
         },
         plugins: [
             typescript(),
+            // babel({
+            //     exclude: 'node_modules/**',
+            // }),
         ],
     },
     {
@@ -19,6 +23,9 @@ module.exports = exports = [
         },
         plugins: [
             typescript(),
+            // babel({
+            //     exclude: 'node_modules/**',
+            // }),
         ],
     },
     {
@@ -30,6 +37,9 @@ module.exports = exports = [
         },
         plugins: [
             typescript(),
+            // babel({
+            //     exclude: 'node_modules/**',
+            // }),
         ],
     },
 ];

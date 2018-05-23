@@ -25,7 +25,6 @@ class Schema {
     [propName: string]: any;
 
     constructor(model: Model, data?: object) {
-        var self = this;
         defVal(this, '_name', 'Schema', false, false, true);
         defVal(this, '_models', {}, false, false, true);
         defVal(this, '_data', {}, false, false, true);
@@ -33,7 +32,7 @@ class Schema {
         defVal(this, '_camelKeys', [], false, false, true);
         defVal(this, '_snakeKeys', [], false, false, true);
 
-        var keys = Object.keys(model);
+        const keys = Object.keys(model);
         var typeInfo = {};
         for (var i = 0, len = keys.length; i < len; i++) {
             var key = keys[i];
@@ -41,7 +40,7 @@ class Schema {
         }
 
         if (data) {
-            var keys = Object.keys(data);
+            const keys = Object.keys(data);
             keys.forEach(function(key) {
                 this[key] = data[key];
             });

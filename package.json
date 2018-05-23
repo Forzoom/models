@@ -1,6 +1,6 @@
 {
   "name": "@forzoom/models",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "",
   "main": "dist/models.cjs.js",
   "module": "dist/models.esm.js",
@@ -11,6 +11,9 @@
   "author": "",
   "license": "MIT",
   "devDependencies": {
+    "babel-core": "^6.26.3",
+    "babel-plugin-external-helpers": "^6.22.0",
+    "babel-preset-es2015": "^6.24.1",
     "chai": "^4.1.2",
     "jasmine": "^3.1.0",
     "karma": "^2.0.2",
@@ -22,10 +25,12 @@
     "karma-spec-reporter": "0.0.32",
     "phantomjs-shim": "^0.1.0",
     "rollup": "^0.58.2",
+    "rollup-plugin-babel": "^3.0.4",
     "rollup-typescript": "^1.1.2",
     "sinon": "^5.0.7",
     "sinon-chai": "^3.0.0",
     "typescript": "^2.8.3",
     "vue": "^2.5.16"
-  }
+  },
+  "dependencies": {}
 }

@@ -60,8 +60,8 @@ var Schema = /** @class */ (function () {
             this.registerProperty(key, model[key]);
         }
         if (data) {
-            var keys = Object.keys(data);
-            keys.forEach(function (key) {
+            var keys_1 = Object.keys(data);
+            keys_1.forEach(function (key) {
                 this[key] = data[key];
             });
         }

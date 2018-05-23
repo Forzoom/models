@@ -2,6 +2,7 @@
 
 npm i @forzoom/models
 
+---
 ### Description
 
 provide commonjs/es6/umd format file.
@@ -20,6 +21,7 @@ for example:
 1. fooBar
 1. foo1
 
+---
 ### Feature
 
 1. support kebabCase and snakeCase access
@@ -28,6 +30,7 @@ for example:
 1. provide `registerProperty()` for add property after instance is created
 1. property support `Vue` reactive data bind
 
+---
 ### Example
 
 ```
@@ -78,6 +81,7 @@ model.helloWorld; // steve
 model.hello_world; // steve
 ```
 
+---
 ### Function
 
 #### inflate(obj: object): void
@@ -85,6 +89,7 @@ model.hello_world; // steve
 #### getSnake(): object
 #### getCamel(): object
 
+---
 ### Test
 
 npm run test
