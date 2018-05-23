@@ -54,4 +54,20 @@ describe('#test', function() {
 		vm.test.fooBar = 'value';
 		expect(vm.computedValue).to.equal('value');
 	});
+
+	it('#getSnake', function() {
+		var test = new Test();
+		var snake = test.getSnake();
+		var camel = test.getCamel();
+
+		expect(Object.keys(snake).length).to.equal(3);
+		expect(snake.key_1).to.equal('defaultValue');
+		expect(snake.key_2).to.be.null;
+		expect(snake.foo_bar).to.null;
+
+		expect(Object.keys(camel).length).to.equal(3);
+		expect(camel.key1).to.equal('defaultValue');
+		expect(camel.key2).to.be.null;
+		expect(camel.fooBar).to.be.null;
+	});
 });

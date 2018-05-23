@@ -103,6 +103,9 @@ class Schema {
             get: getter,
             set: setter,
         });
+
+        this._snakeKeys.push(snakeCase(key));
+        this._camelKeys.push(camelCase(key));
     }
 
     /**

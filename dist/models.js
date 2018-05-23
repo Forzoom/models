@@ -122,6 +122,8 @@
 	            get: getter,
 	            set: setter
 	        });
+	        this._snakeKeys.push(snakeCase(key));
+	        this._camelKeys.push(camelCase(key));
 	    };
 	    /**
 	     * 批量设置

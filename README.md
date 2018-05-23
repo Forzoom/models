@@ -6,6 +6,20 @@ npm i @forzoom/models
 
 provide commonjs/es6/umd format file.
 
+#### SnakeCase
+
+for example:
+
+1. foo_bar
+1. foo_1
+
+#### CamelCase
+
+for example:
+
+1. fooBar
+1. foo1
+
 ### Feature
 
 1. support kebabCase and snakeCase access
@@ -68,6 +82,8 @@ model.hello_world; // steve
 
 #### inflate(obj: object): void
 #### registerProperty(key: string, typeInfo: TypeInfo): void
+#### getSnake(): object
+#### getCamel(): object
 
 ### Test
 
