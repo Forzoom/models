@@ -65,9 +65,9 @@
 	        }
 	        if (data) {
 	            var keys_1 = Object.keys(data);
-	            keys_1.forEach(function (key) {
+	            for (var i_1 = 0, len_1 = keys_1.length; i_1 < len_1; i_1++) {
 	                this[key] = data[key];
-	            });
+	            }
 	        }
 	    }
 	    /**

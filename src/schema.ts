@@ -41,9 +41,9 @@ class Schema {
 
         if (data) {
             const keys = Object.keys(data);
-            keys.forEach(function(key) {
+            for (let i = 0, len = keys.length; i < len; i++) {
                 this[key] = data[key];
-            });
+            }
         }
     }
 
