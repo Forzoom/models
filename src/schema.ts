@@ -45,6 +45,7 @@ class Schema {
         if (data) {
             const keys = Object.keys(data);
             for (let i = 0, len = keys.length; i < len; i++) {
+                const key = keys[i];
                 this[key] = data[key];
             }
         }

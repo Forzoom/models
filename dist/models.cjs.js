@@ -88,7 +88,8 @@ var Schema = /** @class */ (function () {
         if (data) {
             var keys_1 = Object.keys(data);
             for (var i_1 = 0, len_1 = keys_1.length; i_1 < len_1; i_1++) {
-                this[key] = data[key];
+                var key_1 = keys_1[i_1];
+                this[key_1] = data[key_1];
             }
         }
     }

@@ -36,24 +36,14 @@ describe('#Schema', function() {
 			default: 10,
 		});
 		expect(test.foo).to.equal(10);
+	});
 
-		var vm = new Vue({
-			data: function data() {
-				return {
-					test: test,
-				};
-			},
-			computed: {
-				computedValue: function computedValue() {
-					return this.test.fooBar;
-				},
-			},
+	it('#constructor', function() {
+		var test = new Test({
+			key1: 'value1',
 		});
 
-		expect(vm.test.foo_bar).to.equal('foo_bar');
-		expect(vm.computedValue).to.equal('foo_bar');
-		vm.test.fooBar = 'value';
-		expect(vm.computedValue).to.equal('value');
+		expect(test.key1).to.equal('value1');
 	});
 
 	it('#getSnake()', function() {
@@ -94,4 +84,26 @@ describe('#Schema', function() {
 		b.arr.push('test');
 		expect(a.equal(b)).to.be.true;
 	});
+
+	it('#vue-compat', function() {
+		var test = new Test();
+		test.fooBar = 'foo_bar';
+		var vm = new Vue({
+			data: function data() {
+				return {
+					test: test,
+				};
+			},
+			computed: {
+				computedValue: function computedValue() {
+					return this.test.fooBar;
+				},
+			},
+		});
+
+		expect(vm.test.foo_bar).to.equal('foo_bar');
+		expect(vm.computedValue).to.equal('foo_bar');
+		vm.test.fooBar = 'value';
+		expect(vm.computedValue).to.equal('value');
+	})
 });
