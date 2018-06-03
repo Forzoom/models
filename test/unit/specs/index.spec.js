@@ -116,4 +116,14 @@ describe('#Schema', function() {
 
 		expect(test.empty).to.equal('');
 	});
+
+	it('#type-cast', function() {
+		var test = new Test();
+		test.registerProperty('type', {
+			type: 'Boolean',
+			default: false,
+		});
+		test.type = 0;
+		expect(test.type).to.be.false;
+	});
 });

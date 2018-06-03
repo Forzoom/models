@@ -14,7 +14,7 @@ function defVal(target, key, val, enumerable, configurable, writable) {
 }
 // 强制转化成type
 function typeCast(value, type) {
-    window[type](value);
+    return window[type](value);
 }
 
 /**
@@ -132,7 +132,7 @@ var Schema = /** @class */ (function () {
                 // 尝试类型转换
                 var valueType = Object.prototype.toString.call(value).slice(8, -1);
                 if (metaInfo.type.indexOf(valueType) === -1) {
-                    typeCast(value, metaInfo.type);
+                    value = typeCast(value, metaInfo.type);
                 }
             }
             this._data[key] = value;

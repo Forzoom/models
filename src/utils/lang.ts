@@ -10,6 +10,6 @@ export function defVal(target: any, key: string, val: any, enumerable: boolean =
 }
 
 // 强制转化成type
-export function typeCast(value: any, type: string) {
-	window[type](value);
+export function typeCast(value: any, type: string): any {
+	return window[type](value);
 }
