@@ -105,5 +105,15 @@ describe('#Schema', function() {
 		expect(vm.computedValue).to.equal('foo_bar');
 		vm.test.fooBar = 'value';
 		expect(vm.computedValue).to.equal('value');
-	})
+	});
+
+	it('#empty-string', function() {
+		var test = new Test();
+		test.registerProperty('empty', {
+			type: 'String',
+			default: '',
+		});
+
+		expect(test.empty).to.equal('');
+	});
 });

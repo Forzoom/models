@@ -17,5 +17,8 @@
 1. add #equal function
 1. bugfix
 
-#### 0.0.6
+#### 0.0.6(deprecated)
+1. bugfix
+
+#### 0.0.7
 1. bugfix

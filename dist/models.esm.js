@@ -105,13 +105,13 @@ var Schema = /** @class */ (function () {
         // getter
         function getter() {
             var metaInfo = self._metaInfo[key];
-            var ret = self._data[key] || null;
+            var ret = !isUndef(self._data[key]) ? self._data[key] : null;
             var defaultValue = metaInfo["default"] instanceof Function ? metaInfo["default"]() : metaInfo["default"];
             if (isUndef(ret) && !isUndef(defaultValue)) {
                 // 记录数据
                 this._data[key] = defaultValue;
             }
-            return this._data[key] || null;
+            return !isUndef(self._data[key]) ? self._data[key] : null;
         }
         // setter
         function setter(value) {
