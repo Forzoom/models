@@ -10,5 +10,9 @@
 #### 0.0.3(deprecated)
 1. add `rollup-plugin-babel`
 
-#### 0.0.4
+#### 0.0.4(deprecated)
+1. bugfix
+
+#### 0.0.5
+1. add #equal function
 1. bugfix

@@ -79,15 +79,26 @@ model.registerProperty('helloWord', {
 });
 model.helloWorld; // steve
 model.hello_world; // steve
+
+// equal
+const test = new MyModel();
+model.equal(test) // false
 ```
 
 ---
 ### Function
 
-#### inflate(obj: object): void
-#### registerProperty(key: string, typeInfo: TypeInfo): void
-#### getSnake(): object
-#### getCamel(): object
+#### Schema
+
+##### inflate(obj: object): void
+##### registerProperty(key: string, typeInfo: TypeInfo): void
+##### getSnake(): object
+##### getCamel(): object
+##### equal(to: obj): boolean
+
+#### Schema.utils
+
+##### arrayEqual(arr1: Array<any>, arr2: Array<any>): boolean
 
 ---
 ### Test

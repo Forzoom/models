@@ -5,16 +5,19 @@ import {
     snakeCase,
     isUndef,
     typeCast,
-    _parseTypeInfo,
+    arrayEqual,
+    parseTypeInfo,
+    isFunction,
 } from './utils/index';
 
 class Schema {
+    static utils: object;
     // schema名称
     _name: string;
     // 模型原型
     _models: Model;
     // 类型信息
-    _typeInfo: object;
+    _metaInfo: object;
     // 数据存储
     _data: object;
     // camel
@@ -28,7 +31,7 @@ class Schema {
         defVal(this, '_name', 'Schema', false, false, true);
         defVal(this, '_models', {}, false, false, true);
         defVal(this, '_data', {}, false, false, true);
-        defVal(this, '_typeInfo', {}, false, false, true);
+        defVal(this, '_metaInfo', {}, false, false, true);
         defVal(this, '_camelKeys', [], false, false, true);
         defVal(this, '_snakeKeys', [], false, false, true);
 
@@ -57,47 +60,57 @@ class Schema {
         }
         var self = this;
         this._models[key] = typeInfo;
-        this._typeInfo[key] = _parseTypeInfo(typeInfo);
+        this._metaInfo[key] = parseTypeInfo(typeInfo);
 
         // getter
         function getter() {
-            var typeInfo = self._typeInfo[key];
+            var metaInfo = self._metaInfo[key];
             var ret = self._data[key] || null;
-            var defaultValue = typeInfo.default instanceof Function ? typeInfo.default() : typeInfo.default;
-            return isUndef(ret) && !isUndef(defaultValue) ? defaultValue : ret;
+            var defaultValue = metaInfo.default instanceof Function ? metaInfo.default() : metaInfo.default;
+            if (isUndef(ret) && !isUndef(defaultValue)) {
+                // 记录数据
+                this._data[key] = defaultValue;
+            }
+            return this._data[key] || null;
         }
 
         // setter
         function setter(value) {
-            var typeInfo = self._typeInfo[key];
+            var metaInfo = self._metaInfo[key];
             if (isUndef(value)) {
                 // 检查是否有默认值
-                var defaultValue = typeInfo.default;
+                var defaultValue = metaInfo.default;
                 if (!isUndef(defaultValue)) {
                     value = defaultValue instanceof Function ? defaultValue() : defaultValue;
                 }
-                if (isUndef(value) && !typeInfo.nullable) {
+                if (isUndef(value) && !metaInfo.nullable) {
                     throw new Error(`key ${key} in ${self._name} is not nullable`);
                 }
             } else {
                 // 尝试类型转换
                 var valueType = Object.prototype.toString.call(value).slice(8, -1);
-                if (typeInfo.type.indexOf(valueType) === -1) {
-                    typeCast(value, typeInfo.type);
+                if (metaInfo.type.indexOf(valueType) === -1) {
+                    typeCast(value, metaInfo.type);
                 }
             }
 
             this._data[key] = value;
+
+            // hook
+            if (metaInfo.didSet && isFunction(metaInfo.didSet)) {
+
+            }
         }
 
-        Object.defineProperty(this, camelCase(key), {
-            enumerable: true,
+        // 必须先定义snake，再定义camel，因为部分情况下 snakeCase(key) == camelCase(key)
+        Object.defineProperty(this, snakeCase(key), {
+            enumerable: false,
             configurable: true,
             get: getter,
             set: setter,
         });
-        Object.defineProperty(this, snakeCase(key), {
-            enumerable: false,
+        Object.defineProperty(this, camelCase(key), {
+            enumerable: true,
             configurable: true,
             get: getter,
             set: setter,
@@ -141,6 +154,27 @@ class Schema {
         }
         return result;
     }
+
+    equal(to: object): boolean {
+        for (let i = 0, len = this._camelKeys.length; i < len; i++) {
+            const key = this._camelKeys[i];
+            const type = (this._metaInfo[key] as TypeInfo).type;
+            if (type == 'Array') {
+                if (!arrayEqual(this[key], to[key])) {
+                    return false;
+                }
+            } else {
+                if (this[key] !== to[key]) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
 }
+
+Schema.utils = {
+    arrayEqual,
+};
 
 export default Schema;

@@ -22,7 +22,7 @@ function typeCast(value, type) {
  *
  * @param {TypeInfo} info 类型信息
  */
-function _parseTypeInfo(info) {
+function parseTypeInfo(info) {
     return {
         type: info.type.indexOf('?') !== -1 ? info.type.slice(0, -1) : info.type,
         nullable: info.type.indexOf('?') !== -1,
@@ -45,13 +45,39 @@ function snakeCase(key) {
 function isUndef(v) {
     return v === null || v === undefined;
 }
+/**
+ * 判断数组相等
+ * @param arr1
+ * @param arr2
+ */
+function arrayEqual(arr1, arr2) {
+    if (arr1.length != arr2.length) {
+        return false;
+    }
+    var map = {};
+    for (var i = 0, len = arr1.length; i < len; i++) {
+        var key = arr1[i];
+        map[key] = 0;
+    }
+    for (var i = 0, len = arr1.length; i < len; i++) {
+        var key = arr2[i];
+        map[key] = 1;
+    }
+    return arr1.filter(function (key) { return map[key] == 0; }).length == 0;
+}
+function isType(name) {
+    return function (obj) {
+        return Object.prototype.toString.call(obj) === '[object ' + name + ']';
+    };
+}
+var isFunction = isType('Function');
 
 var Schema = /** @class */ (function () {
     function Schema(model, data) {
         defVal(this, '_name', 'Schema', false, false, true);
         defVal(this, '_models', {}, false, false, true);
         defVal(this, '_data', {}, false, false, true);
-        defVal(this, '_typeInfo', {}, false, false, true);
+        defVal(this, '_metaInfo', {}, false, false, true);
         defVal(this, '_camelKeys', [], false, false, true);
         defVal(this, '_snakeKeys', [], false, false, true);
         var keys = Object.keys(model);
@@ -76,44 +102,51 @@ var Schema = /** @class */ (function () {
         }
         var self = this;
         this._models[key] = typeInfo;
-        this._typeInfo[key] = _parseTypeInfo(typeInfo);
+        this._metaInfo[key] = parseTypeInfo(typeInfo);
         // getter
         function getter() {
-            var typeInfo = self._typeInfo[key];
+            var metaInfo = self._metaInfo[key];
             var ret = self._data[key] || null;
-            var defaultValue = typeInfo["default"] instanceof Function ? typeInfo["default"]() : typeInfo["default"];
-            return isUndef(ret) && !isUndef(defaultValue) ? defaultValue : ret;
+            var defaultValue = metaInfo["default"] instanceof Function ? metaInfo["default"]() : metaInfo["default"];
+            if (isUndef(ret) && !isUndef(defaultValue)) {
+                // 记录数据
+                this._data[key] = defaultValue;
+            }
+            return this._data[key] || null;
         }
         // setter
         function setter(value) {
-            var typeInfo = self._typeInfo[key];
+            var metaInfo = self._metaInfo[key];
             if (isUndef(value)) {
                 // 检查是否有默认值
-                var defaultValue = typeInfo["default"];
+                var defaultValue = metaInfo["default"];
                 if (!isUndef(defaultValue)) {
                     value = defaultValue instanceof Function ? defaultValue() : defaultValue;
                 }
-                if (isUndef(value) && !typeInfo.nullable) {
+                if (isUndef(value) && !metaInfo.nullable) {
                     throw new Error("key " + key + " in " + self._name + " is not nullable");
                 }
             }
             else {
                 // 尝试类型转换
                 var valueType = Object.prototype.toString.call(value).slice(8, -1);
-                if (typeInfo.type.indexOf(valueType) === -1) {
-                    typeCast(value, typeInfo.type);
+                if (metaInfo.type.indexOf(valueType) === -1) {
+                    typeCast(value, metaInfo.type);
                 }
             }
             this._data[key] = value;
+            // hook
+            if (metaInfo.didSet && isFunction(metaInfo.didSet)) ;
         }
-        Object.defineProperty(this, camelCase(key), {
-            enumerable: true,
+        // 必须先定义snake，再定义camel，因为部分情况下 snakeCase(key) == camelCase(key)
+        Object.defineProperty(this, snakeCase(key), {
+            enumerable: false,
             configurable: true,
             get: getter,
             set: setter
         });
-        Object.defineProperty(this, snakeCase(key), {
-            enumerable: false,
+        Object.defineProperty(this, camelCase(key), {
+            enumerable: true,
             configurable: true,
             get: getter,
             set: setter
@@ -153,7 +186,27 @@ var Schema = /** @class */ (function () {
         }
         return result;
     };
+    Schema.prototype.equal = function (to) {
+        for (var i = 0, len = this._camelKeys.length; i < len; i++) {
+            var key = this._camelKeys[i];
+            var type = this._metaInfo[key].type;
+            if (type == 'Array') {
+                if (!arrayEqual(this[key], to[key])) {
+                    return false;
+                }
+            }
+            else {
+                if (this[key] !== to[key]) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    };
     return Schema;
 }());
+Schema.utils = {
+    arrayEqual: arrayEqual
+};
 
 module.exports = Schema;
