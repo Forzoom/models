@@ -30,7 +30,8 @@
 	    return {
 	        type: info.type.indexOf('?') !== -1 ? info.type.slice(0, -1) : info.type,
 	        nullable: info.type.indexOf('?') !== -1,
-	        "default": info["default"]
+	        "default": info["default"],
+	        extra: info.extra
 	    };
 	}
 	function camelCase(key) {

@@ -86,6 +86,40 @@ model.equal(test) // false
 ```
 
 ---
+### Model
+
+`Model` is object which contain `property`'s info, such as type, default value and so on
+
+#### example
+```
+{
+    key1: {
+        type: 'String?',
+        default: 'value1',
+    },
+    key2: {
+        type: 'Number',
+    },
+    fooBar: {
+        type: 'String?',
+        default: 'fooBar',
+    },
+}
+```
+
+#### type
+
+type of property.
+
+#### default
+
+default value of property.
+
+#### extra (since@0.0.9)
+
+extra value of property.
+
+---
 ### Function
 
 #### Schema

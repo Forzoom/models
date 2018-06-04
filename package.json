@@ -1,6 +1,6 @@
 {
   "name": "@forzoom/models",
-  "version": "0.0.8",
+  "version": "0.0.9",
   "description": "",
   "main": "dist/models.cjs.js",
   "module": "dist/models.esm.js",

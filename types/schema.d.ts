@@ -3,6 +3,7 @@ interface Model {
 }
 
 interface TypeInfo {
-    type: string,
-    default: any,
+    type: string;
+    default: any;
+    extra: object;
 }

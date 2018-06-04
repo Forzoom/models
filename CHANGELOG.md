@@ -25,3 +25,6 @@
 
 #### 0.0.8
 1. bugfix
+
+#### 0.0.9
+1. `model` add `extra` property

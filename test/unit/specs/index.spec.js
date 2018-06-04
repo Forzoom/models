@@ -126,4 +126,14 @@ describe('#Schema', function() {
 		test.type = 0;
 		expect(test.type).to.be.false;
 	});
+
+	it('#meta-info', function() {
+		var test = new Test();
+		test.registerProperty('foo', {
+			type: 'Boolean',
+			extra: 'extra data',
+		});
+
+		expect(test._metaInfo.foo.extra).to.equal('extra data');
+	});
 });

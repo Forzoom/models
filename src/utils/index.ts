@@ -10,6 +10,7 @@ export function parseTypeInfo(info: TypeInfo): object {
         type: info.type.indexOf('?') !== -1 ? info.type.slice(0, -1) : info.type, // 不会包含?这样的字符
         nullable: info.type.indexOf('?') !== -1,
         default: info.default,
+        extra: info.extra,
     };
 }
 
