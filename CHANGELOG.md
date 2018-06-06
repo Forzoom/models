@@ -28,3 +28,6 @@
 
 #### 0.0.9
 1. `model` add `extra` property
+
+#### 0.0.10
+1. better `inflate()`. `inflate()` now doesn't accept unregister property

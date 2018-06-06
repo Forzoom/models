@@ -43,11 +43,7 @@ class Schema {
         }
 
         if (data) {
-            const keys = Object.keys(data);
-            for (let i = 0, len = keys.length; i < len; i++) {
-                const key = keys[i];
-                this[key] = data[key];
-            }
+            this.inflate(data);
         }
     }
 
@@ -123,12 +119,15 @@ class Schema {
 
     /**
      * 批量设置
+     * @param object obj 其中key允许camel/snake
      */
     inflate(obj: object): void {
         var keys = Object.keys(obj);
         for (var i = 0, len = keys.length; i < len; i++) {
             var key = keys[i];
-            this[key] = obj[key];
+            if (this._metaInfo[camelCase(key)]) {
+                this[key] = obj[key];
+            }
         }
     }
 

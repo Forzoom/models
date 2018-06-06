@@ -46,6 +46,17 @@ describe('#Schema', function() {
 		expect(test.key1).to.equal('value1');
 	});
 
+	it('#inflate()', function() {
+		var test = new Test();
+		test.inflate({
+			key1: 'value1',
+			unknownKey: 'unknown',
+		});
+
+		expect(test.key1).to.equal('value1');
+		expect(test.unknownKey).to.be.undefined;
+	});
+
 	it('#getSnake()', function() {
 		var test = new Test();
 		var snake = test.getSnake();
