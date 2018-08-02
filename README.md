@@ -129,6 +129,7 @@ extra value of property.
 ##### getSnake(): object
 ##### getCamel(): object
 ##### equal(to: obj): boolean
+##### setNullable(key: string, nullable: boolean): void
 
 #### Schema.utils
 

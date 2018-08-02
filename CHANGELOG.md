@@ -31,3 +31,7 @@
 
 #### 0.0.10
 1. better `inflate()`. `inflate()` now doesn't accept unregister property
+
+#### 0.0.11
+1. metaInfo允许设置configurable
+1. 添加setNullable(key, nullable)，允许对模型进行修改
