@@ -211,6 +211,27 @@
 	        }
 	        return true;
 	    };
+	    /**
+	     * 设置是否允许null
+	     * @param key
+	     * @param nullable
+	     */
+	    Schema.prototype.setNullable = function (key, nullable) {
+	        if (!this._models.hasOwnProperty(key)) {
+	            return;
+	        }
+	        if (this._metaInfo[key].nullable === nullable) {
+	            return;
+	        }
+	        var type = this._models[key].type;
+	        if (nullable) {
+	            this._models[key].type = type + '?';
+	        }
+	        else {
+	            this._models[key].type = type.slice(0, -1);
+	        }
+	        this._metaInfo[key].nullable = nullable;
+	    };
 	    return Schema;
 	}());
 	Schema.utils = {

@@ -7,3 +7,7 @@ interface TypeInfo {
     default: any;
     extra: object;
 }
+
+interface ModelOptions {
+    metaInfoConfigurable: boolean;
+}

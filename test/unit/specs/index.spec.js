@@ -177,4 +177,20 @@ describe('#Schema', function() {
 		test._metaInfo.fooBar.extra = 'extra data 2';
 		expect(vm.computedValue).to.equal('extra data 2');
 	});
+
+	// setNullable是否正常运行
+	it('#setNullable execute correct?', function() {
+		var test = new Test();
+		expect(test._models.key1.type).to.equal('String');
+		expect(test._models.key2.type).to.equal('String?');
+		expect(test._metaInfo.key1.nullable).to.be.false;
+		expect(test._metaInfo.key2.nullable).to.be.true;
+		
+		test.setNullable('key1', true);
+		test.setNullable('key2', false);
+		expect(test._models.key1.type).to.equal('String?');
+		expect(test._models.key2.type).to.equal('String');
+		expect(test._metaInfo.key1.nullable).to.be.true;
+		expect(test._metaInfo.key2.nullable).to.be.false;
+	});
 });

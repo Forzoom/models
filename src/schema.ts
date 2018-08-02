@@ -174,6 +174,29 @@ class Schema {
         }
         return true;
     }
+
+    /**
+     * 设置是否允许null
+     * @param key 
+     * @param nullable 
+     */
+    setNullable(key: string, nullable: boolean): void {
+        if (!this._models.hasOwnProperty(key)) {
+            return;
+        }
+
+        if (this._metaInfo[key].nullable === nullable) {
+            return;
+        }
+        
+        const type = this._models[key].type;
+        if (nullable) {
+            this._models[key].type = type + '?';
+        } else {
+            this._models[key].type = type.slice(0, -1);
+        }
+        this._metaInfo[key].nullable = nullable;
+    }
 }
 
 Schema.utils = {
