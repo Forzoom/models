@@ -167,7 +167,7 @@ describe('#Schema', function() {
 					return this.test._metaInfo.fooBar.extra;
 				},
 			},
-			created() {
+			created: function() {
 				this.metaInfo = this.test._metaInfo;
 			},
 		});
