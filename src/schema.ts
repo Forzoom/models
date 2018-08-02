@@ -27,16 +27,19 @@ class Schema {
     // 允许添加其他属性
     [propName: string]: any;
 
-    constructor(model: Model, data?: object) {
+    constructor(model: Model, data?: object, options?: ModelOptions) {
+        options = Object.assign({
+            metaInfoConfigurable: false,
+        }, options || {});
+
         defVal(this, '_name', 'Schema', false, false, true);
         defVal(this, '_models', {}, false, false, true);
         defVal(this, '_data', {}, false, false, true);
-        defVal(this, '_metaInfo', {}, false, false, true);
+        defVal(this, '_metaInfo', {}, options.metaInfoConfigurable, false, true);
         defVal(this, '_camelKeys', [], false, false, true);
         defVal(this, '_snakeKeys', [], false, false, true);
 
         const keys = Object.keys(model);
-        var typeInfo = {};
         for (var i = 0, len = keys.length; i < len; i++) {
             var key = keys[i];
             this.registerProperty(key, model[key]);

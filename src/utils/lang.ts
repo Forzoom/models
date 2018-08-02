@@ -1,6 +1,6 @@
 
 // 定义data descriptor
-export function defVal(target: any, key: string, val: any, enumerable: boolean = true, configurable: boolean = true, writable: boolean = true) {
+export function defVal(target: any, key: string, val: any, configurable: boolean = true, enumerable: boolean = true, writable: boolean = true) {
 	Object.defineProperty(target, key, {
 		value: val,
 		configurable,

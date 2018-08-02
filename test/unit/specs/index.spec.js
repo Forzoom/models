@@ -1,12 +1,12 @@
-function Test(data) {
-	Schema.call(this, Test._model, data);
+function Test(data, options) {
+	Schema.call(this, Test._model, data, options);
 	this._name = Test.name;
 }
 Test.prototype = Schema.prototype;
 Test._model = {
 	key1: { type: 'String', default: 'defaultValue', },
 	key2: { type: 'String?', },
-	fooBar: { type: 'String' },
+	fooBar: { type: 'String', extra: 'extra data', },
 	arr: { type: 'Array', default: function() { return []; }, },
 };
 
@@ -138,7 +138,8 @@ describe('#Schema', function() {
 		expect(test.type).to.be.false;
 	});
 
-	it('#meta-info', function() {
+	// 测试extra数据是否正常
+	it('#metaInfo is set correct?', function() {
 		var test = new Test();
 		test.registerProperty('foo', {
 			type: 'Boolean',
@@ -146,5 +147,34 @@ describe('#Schema', function() {
 		});
 
 		expect(test._metaInfo.foo.extra).to.equal('extra data');
+	});
+
+	// 测试metaInfo是否能够正确被设置为configurable
+	it('#metaInfo is set configurable?', function() {
+		var test = new Test({}, {
+			metaInfoConfigurable: true,
+		});
+		test.fooBar = 'foo_bar';
+		var vm = new Vue({
+			data: function data() {
+				return {
+					test: test,
+					metaInfo: null,
+				};
+			},
+			computed: {
+				computedValue: function computedValue() {
+					return this.test._metaInfo.fooBar.extra;
+				},
+			},
+			created() {
+				this.metaInfo = this.test._metaInfo;
+			},
+		});
+
+		expect(vm.computedValue).to.equal('extra data');
+		// console.log('target2', typeof test._metaInfo.__ob__);
+		test._metaInfo.fooBar.extra = 'extra data 2';
+		expect(vm.computedValue).to.equal('extra data 2');
 	});
 });

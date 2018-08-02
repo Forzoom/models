@@ -1,7 +1,7 @@
 // 定义data descriptor
-function defVal(target, key, val, enumerable, configurable, writable) {
-    if (enumerable === void 0) { enumerable = true; }
+function defVal(target, key, val, configurable, enumerable, writable) {
     if (configurable === void 0) { configurable = true; }
+    if (enumerable === void 0) { enumerable = true; }
     if (writable === void 0) { writable = true; }
     Object.defineProperty(target, key, {
         value: val,
@@ -72,11 +72,14 @@ function isType(name) {
 var isFunction = isType('Function');
 
 var Schema = /** @class */ (function () {
-    function Schema(model, data) {
+    function Schema(model, data, options) {
+        options = Object.assign({
+            metaInfoConfigurable: false
+        }, options || {});
         defVal(this, '_name', 'Schema', false, false, true);
         defVal(this, '_models', {}, false, false, true);
         defVal(this, '_data', {}, false, false, true);
-        defVal(this, '_metaInfo', {}, false, false, true);
+        defVal(this, '_metaInfo', {}, options.metaInfoConfigurable, false, true);
         defVal(this, '_camelKeys', [], false, false, true);
         defVal(this, '_snakeKeys', [], false, false, true);
         var keys = Object.keys(model);
