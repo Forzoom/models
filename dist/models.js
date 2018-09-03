@@ -31,7 +31,7 @@
 	        type: info.type.indexOf('?') !== -1 ? info.type.slice(0, -1) : info.type,
 	        nullable: info.type.indexOf('?') !== -1,
 	        "default": info["default"],
-	        extra: info.extra
+	        extra: isFunction(info.extra) ? info.extra() : info.extra
 	    };
 	}
 	function camelCase(key) {
