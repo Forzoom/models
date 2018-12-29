@@ -1,3 +1,3 @@
-import Schema from './schema.js';
+import Schema from './schema';
 
 export default Schema;

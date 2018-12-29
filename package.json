@@ -1,6 +1,6 @@
 {
   "name": "@forzoom/models",
-  "version": "0.0.12",
+  "version": "0.0.22",
   "description": "",
   "main": "dist/models.cjs.js",
   "module": "dist/models.esm.js",
@@ -8,6 +8,11 @@
     "test": "karma start ./test/unit/karma.conf.js",
     "build": "node build/build.js"
   },
+  "files": [
+    "src/*.js",
+    "dist/*.js",
+    "types/*.d.ts"
+  ],
   "author": "",
   "license": "MIT",
   "devDependencies": {
@@ -18,6 +23,7 @@
     "jasmine": "^3.1.0",
     "karma": "^2.0.2",
     "karma-chrome-launcher": "^2.2.0",
+    "karma-coverage": "^1.1.2",
     "karma-jasmine": "^1.1.2",
     "karma-phantomjs-launcher": "^1.0.4",
     "karma-phantomjs-shim": "^1.5.0",
@@ -33,5 +39,6 @@
     "typescript": "^2.8.3",
     "vue": "^2.5.16"
   },
-  "dependencies": {}
+  "dependencies": {},
+  "types": "types/index.d.ts"
 }

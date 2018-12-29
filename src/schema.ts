@@ -1,4 +1,3 @@
-
 import {
     defVal,
     camelCase,
@@ -10,24 +9,30 @@ import {
     isFunction,
 } from './utils/index';
 
+import { Model, ModelOptions, TypeInfo, ParsedTypeInfo, } from "../types/index";
+
 class Schema {
     static utils: object;
     // schema名称
-    _name: string;
+    _name!: string;
     // 模型原型
-    _models: Model;
+    public static _models: Model;
     // 类型信息
-    _metaInfo: object;
+    _metaInfo!: {
+        [key: string]: ParsedTypeInfo,
+    };
     // 数据存储
-    _data: object;
+    _data!: {
+        [key: string]: any,
+    };
     // camel
-    _camelKeys: [string];
+    _camelKeys!: [string];
     // snake
-    _snakeKeys: [string];
+    _snakeKeys!: [string];
     // 允许添加其他属性
     [propName: string]: any;
 
-    constructor(model: Model, data?: object, options?: ModelOptions) {
+    constructor(models: Model, data?: object, options?: ModelOptions) {
         options = Object.assign({
             metaInfoConfigurable: false,
         }, options || {});
@@ -38,11 +43,11 @@ class Schema {
         defVal(this, '_metaInfo', {}, options.metaInfoConfigurable, false, true);
         defVal(this, '_camelKeys', [], false, false, true);
         defVal(this, '_snakeKeys', [], false, false, true);
-
-        const keys = Object.keys(model);
+        this._models = models;
+        const keys = Object.keys(this._models);
         for (var i = 0, len = keys.length; i < len; i++) {
             var key = keys[i];
-            this.registerProperty(key, model[key]);
+            this.registerProperty(key, this._models[key]);
         }
 
         if (data) {
@@ -54,7 +59,7 @@ class Schema {
      * 注册数据
      * @param {string} key 要求camel形式
      */
-    registerProperty(key: string, typeInfo: TypeInfo) {
+    registerProperty(key: string, typeInfo: TypeInfo): void {
         if (key[0] === '_') {
             return;
         }
@@ -69,13 +74,13 @@ class Schema {
             var defaultValue = metaInfo.default instanceof Function ? metaInfo.default() : metaInfo.default;
             if (isUndef(ret) && !isUndef(defaultValue)) {
                 // 记录数据
-                this._data[key] = defaultValue;
+                self._data[key] = defaultValue;
             }
             return !isUndef(self._data[key]) ? self._data[key] : null;
         }
 
         // setter
-        function setter(value) {
+        function setter(value: any) {
             var metaInfo = self._metaInfo[key];
             if (isUndef(value)) {
                 // 检查是否有默认值
@@ -84,7 +89,8 @@ class Schema {
                     value = defaultValue instanceof Function ? defaultValue() : defaultValue;
                 }
                 if (isUndef(value) && !metaInfo.nullable) {
-                    throw new Error(`key ${key} in ${self._name} is not nullable`);
+                    // 有争议
+                    // throw new Error(`key ${key} in ${self._name} is not nullable`);
                 }
             } else {
                 // 尝试类型转换
@@ -94,12 +100,7 @@ class Schema {
                 }
             }
 
-            this._data[key] = value;
-
-            // hook
-            if (metaInfo.didSet && isFunction(metaInfo.didSet)) {
-
-            }
+            self._data[key] = value;
         }
 
         // 必须先定义snake，再定义camel，因为部分情况下 snakeCase(key) == camelCase(key)
@@ -124,7 +125,7 @@ class Schema {
      * 批量设置
      * @param object obj 其中key允许camel/snake
      */
-    inflate(obj: object): void {
+    inflate(obj: any): void {
         var keys = Object.keys(obj);
         for (var i = 0, len = keys.length; i < len; i++) {
             var key = keys[i];
@@ -138,7 +139,9 @@ class Schema {
      * 获得snake_style数据
      */
     getSnake(): object {
-        var result = {};
+        var result: {
+            [key: string]: any,
+        } = {};
         for (var i = 0, len = this._snakeKeys.length; i < len; i++) {
             var key = this._snakeKeys[i];
             result[key] = this[key];
@@ -150,7 +153,9 @@ class Schema {
      * 获得camel_style数据
      */
     getCamel(): object {
-        var result = {};
+        var result: {
+            [key: string]: any,
+        } = {};
         for (var i = 0, len = this._camelKeys.length; i < len; i++) {
             var key = this._camelKeys[i];
             result[key] = this[key];
@@ -158,7 +163,7 @@ class Schema {
         return result;
     }
 
-    equal(to: object): boolean {
+    equal(to: any): boolean {
         for (let i = 0, len = this._camelKeys.length; i < len; i++) {
             const key = this._camelKeys[i];
             const type = (this._metaInfo[key] as TypeInfo).type;

@@ -35,3 +35,16 @@
 #### 0.0.11
 1. metaInfo允许设置configurable
 1. 添加setNullable(key, nullable)，允许对模型进行修改
+
+#### 0.0.12
+1. 允许非共享的metaInfo
+
+#### 0.0.18
+1. 添加types支持
+
+#### 0.0.22
+1. build: 添加tsconfig.json并完成修改为typescript编写
+2. build: 修改umd包全局输出对象 Schema -> Models
+3. feat: 修改Schema类的_models为静态变量
+4. feat: 修改util.snakeCase函数逻辑
+5. style: 优化代码样式，主要修复tslint错误

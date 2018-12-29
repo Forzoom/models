@@ -7,7 +7,7 @@ function defVal(target, key, val, configurable, enumerable, writable) {
         value: val,
         configurable: configurable,
         enumerable: enumerable,
-        writable: writable
+        writable: writable,
     });
 }
 // 强制转化成type
@@ -24,15 +24,15 @@ function parseTypeInfo(info) {
     return {
         type: info.type.indexOf('?') !== -1 ? info.type.slice(0, -1) : info.type,
         nullable: info.type.indexOf('?') !== -1,
-        "default": info["default"],
-        extra: isFunction(info.extra) ? info.extra() : info.extra
+        default: info.default,
+        extra: isFunction(info.extra) ? info.extra() : info.extra,
     };
 }
 function camelCase(key) {
     return key.replace(/[-_][a-z0-9]/g, function (ch) { return ch.substr(1).toUpperCase(); });
 }
 function snakeCase(key) {
-    return key.replace(/[A-Z0-9]+/g, function (ch) { return ('_' + ch.toLowerCase()); });
+    return key.replace(/([A-Z]+|[0-9]+)/g, function (ch) { return ('_' + ch.toLowerCase()); });
 }
 /**
  * 是否是null或者undefined
@@ -72,9 +72,9 @@ function isType(name) {
 var isFunction = isType('Function');
 
 var Schema = /** @class */ (function () {
-    function Schema(model, data, options) {
+    function Schema(models, data, options) {
         options = Object.assign({
-            metaInfoConfigurable: false
+            metaInfoConfigurable: false,
         }, options || {});
         defVal(this, '_name', 'Schema', false, false, true);
         defVal(this, '_models', {}, false, false, true);
@@ -82,10 +82,11 @@ var Schema = /** @class */ (function () {
         defVal(this, '_metaInfo', {}, options.metaInfoConfigurable, false, true);
         defVal(this, '_camelKeys', [], false, false, true);
         defVal(this, '_snakeKeys', [], false, false, true);
-        var keys = Object.keys(model);
+        this._models = models;
+        var keys = Object.keys(this._models);
         for (var i = 0, len = keys.length; i < len; i++) {
             var key = keys[i];
-            this.registerProperty(key, model[key]);
+            this.registerProperty(key, this._models[key]);
         }
         if (data) {
             this.inflate(data);
@@ -106,10 +107,10 @@ var Schema = /** @class */ (function () {
         function getter() {
             var metaInfo = self._metaInfo[key];
             var ret = !isUndef(self._data[key]) ? self._data[key] : null;
-            var defaultValue = metaInfo["default"] instanceof Function ? metaInfo["default"]() : metaInfo["default"];
+            var defaultValue = metaInfo.default instanceof Function ? metaInfo.default() : metaInfo.default;
             if (isUndef(ret) && !isUndef(defaultValue)) {
                 // 记录数据
-                this._data[key] = defaultValue;
+                self._data[key] = defaultValue;
             }
             return !isUndef(self._data[key]) ? self._data[key] : null;
         }
@@ -118,13 +119,11 @@ var Schema = /** @class */ (function () {
             var metaInfo = self._metaInfo[key];
             if (isUndef(value)) {
                 // 检查是否有默认值
-                var defaultValue = metaInfo["default"];
+                var defaultValue = metaInfo.default;
                 if (!isUndef(defaultValue)) {
                     value = defaultValue instanceof Function ? defaultValue() : defaultValue;
                 }
-                if (isUndef(value) && !metaInfo.nullable) {
-                    throw new Error("key " + key + " in " + self._name + " is not nullable");
-                }
+                if (isUndef(value) && !metaInfo.nullable) ;
             }
             else {
                 // 尝试类型转换
@@ -133,22 +132,20 @@ var Schema = /** @class */ (function () {
                     value = typeCast(value, metaInfo.type);
                 }
             }
-            this._data[key] = value;
-            // hook
-            if (metaInfo.didSet && isFunction(metaInfo.didSet)) ;
+            self._data[key] = value;
         }
         // 必须先定义snake，再定义camel，因为部分情况下 snakeCase(key) == camelCase(key)
         Object.defineProperty(this, snakeCase(key), {
             enumerable: false,
             configurable: true,
             get: getter,
-            set: setter
+            set: setter,
         });
         Object.defineProperty(this, camelCase(key), {
             enumerable: true,
             configurable: true,
             get: getter,
-            set: setter
+            set: setter,
         });
         this._snakeKeys.push(snakeCase(key));
         this._camelKeys.push(camelCase(key));
@@ -229,7 +226,7 @@ var Schema = /** @class */ (function () {
     return Schema;
 }());
 Schema.utils = {
-    arrayEqual: arrayEqual
+    arrayEqual: arrayEqual,
 };
 
 export default Schema;

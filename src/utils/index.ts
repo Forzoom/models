@@ -1,3 +1,5 @@
+import { TypeInfo, ParsedTypeInfo } from 'types';
+
 export * from './lang';
 
 /**
@@ -5,7 +7,7 @@ export * from './lang';
  * 
  * @param {TypeInfo} info 类型信息
  */
-export function parseTypeInfo(info: TypeInfo): object {
+export function parseTypeInfo(info: TypeInfo): ParsedTypeInfo {
     return {
         type: info.type.indexOf('?') !== -1 ? info.type.slice(0, -1) : info.type, // 不会包含?这样的字符
         nullable: info.type.indexOf('?') !== -1,
@@ -18,8 +20,12 @@ export function camelCase(key: string): string {
     return key.replace(/[-_][a-z0-9]/g, ch => ch.substr(1).toUpperCase());
 }
 
+export function camelize(key: string): string {
+    return key.replace(/[-_][a-z0-9]/g, ch => ch.substr(1).toUpperCase());
+}
+
 export function snakeCase(key: string): string {
-    return key.replace(/[A-Z0-9]+/g, ch => ('_' + ch.toLowerCase()));
+    return key.replace(/([A-Z]+|[0-9]+)/g, ch => ('_' + ch.toLowerCase()));
 }
 
 /**
@@ -29,7 +35,7 @@ export function snakeCase(key: string): string {
  *
  * @return {boolean}
  */
-export function isUndef(v) {
+export function isUndef(v: any) {
     return v === null || v === undefined;
 }
 
@@ -42,7 +48,9 @@ export function arrayEqual(arr1: Array<any>, arr2: Array<any>) {
     if (arr1.length != arr2.length) {
         return false;
     }
-    const map = {};
+    const map: {
+        [key: string]: number,
+    } = {};
     for (let i = 0, len = arr1.length; i < len; i++) {
         const key = arr1[i];
         map[key] = 0;
@@ -54,7 +62,7 @@ export function arrayEqual(arr1: Array<any>, arr2: Array<any>) {
     return arr1.filter(key => map[key] == 0).length == 0;
 }
 
-export function isType(name): (any) => boolean {
+export function isType(name: string): (obj: any) => boolean {
     return function(obj: any): boolean {
         return Object.prototype.toString.call(obj) === '[object ' + name + ']';
     };
