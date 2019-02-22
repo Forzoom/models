@@ -43,6 +43,7 @@ class Schema {
         defVal(this, '_metaInfo', {}, options.metaInfoConfigurable, false, true);
         defVal(this, '_camelKeys', [], false, false, true);
         defVal(this, '_snakeKeys', [], false, false, true);
+        // todo: 缺少_models的定义
         this._models = models;
         const keys = Object.keys(this._models);
         for (var i = 0, len = keys.length; i < len; i++) {

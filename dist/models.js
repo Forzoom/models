@@ -1,8 +1,8 @@
 (function (global, factory) {
-	typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
-	typeof define === 'function' && define.amd ? define(factory) :
-	(global.Schema = factory());
-}(this, (function () { 'use strict';
+	typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports) :
+	typeof define === 'function' && define.amd ? define(['exports'], factory) :
+	(factory((global.Models = {})));
+}(this, (function (exports) { 'use strict';
 
 	// 定义data descriptor
 	function defVal(target, key, val, configurable, enumerable, writable) {
@@ -88,6 +88,7 @@
 	        defVal(this, '_metaInfo', {}, options.metaInfoConfigurable, false, true);
 	        defVal(this, '_camelKeys', [], false, false, true);
 	        defVal(this, '_snakeKeys', [], false, false, true);
+	        // todo: 缺少_models的定义
 	        this._models = models;
 	        var keys = Object.keys(this._models);
 	        for (var i = 0, len = keys.length; i < len; i++) {
@@ -235,6 +236,16 @@
 	    arrayEqual: arrayEqual,
 	};
 
-	return Schema;
+	function RuntimeType(options) {
+	    return function (target) {
+	        // 这里target代表class，或者说代表一个function
+	        target.models = options.models;
+	    };
+	}
+
+	exports.Schema = Schema;
+	exports.RuntimeType = RuntimeType;
+
+	Object.defineProperty(exports, '__esModule', { value: true });
 
 })));

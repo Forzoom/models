@@ -1,4 +1,4 @@
-const typescript = require('rollup-typescript');
+const typescript = require('rollup-plugin-typescript');
 
 module.exports = exports = [
     {

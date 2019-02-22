@@ -34,7 +34,9 @@ for example:
 ### Example
 
 ```
-import Schema from '@forzoom/models';
+import {
+    Schema,
+} from '@forzoom/models';
 
 class MyModel extends Schema {
     constructor(data) {
@@ -83,6 +85,25 @@ model.hello_world; // steve
 // equal
 const test = new MyModel();
 model.equal(test) // false
+```
+
+使用ts
+
+```
+import {
+    Schema,
+    RuntimeType,
+} from '@/forzoom/models'
+
+@RuntimeType({
+    foo: {
+        type: 'String?',
+        default: 'bar',
+    },
+})
+class MyModel extends Schema {
+    public foo!: string;
+}
 ```
 
 ---

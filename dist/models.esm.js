@@ -82,6 +82,7 @@ var Schema = /** @class */ (function () {
         defVal(this, '_metaInfo', {}, options.metaInfoConfigurable, false, true);
         defVal(this, '_camelKeys', [], false, false, true);
         defVal(this, '_snakeKeys', [], false, false, true);
+        // todo: 缺少_models的定义
         this._models = models;
         var keys = Object.keys(this._models);
         for (var i = 0, len = keys.length; i < len; i++) {
@@ -229,4 +230,11 @@ Schema.utils = {
     arrayEqual: arrayEqual,
 };
 
-export default Schema;
+function RuntimeType(options) {
+    return function (target) {
+        // 这里target代表class，或者说代表一个function
+        target.models = options.models;
+    };
+}
+
+export { Schema, RuntimeType };

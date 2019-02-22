@@ -1,5 +1,7 @@
 'use strict';
 
+Object.defineProperty(exports, '__esModule', { value: true });
+
 // 定义data descriptor
 function defVal(target, key, val, configurable, enumerable, writable) {
     if (configurable === void 0) { configurable = true; }
@@ -84,6 +86,7 @@ var Schema = /** @class */ (function () {
         defVal(this, '_metaInfo', {}, options.metaInfoConfigurable, false, true);
         defVal(this, '_camelKeys', [], false, false, true);
         defVal(this, '_snakeKeys', [], false, false, true);
+        // todo: 缺少_models的定义
         this._models = models;
         var keys = Object.keys(this._models);
         for (var i = 0, len = keys.length; i < len; i++) {
@@ -231,4 +234,12 @@ Schema.utils = {
     arrayEqual: arrayEqual,
 };
 
-module.exports = Schema;
+function RuntimeType(options) {
+    return function (target) {
+        // 这里target代表class，或者说代表一个function
+        target.models = options.models;
+    };
+}
+
+exports.Schema = Schema;
+exports.RuntimeType = RuntimeType;

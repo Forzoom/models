@@ -48,3 +48,7 @@
 3. feat: 修改Schema类的_models为静态变量
 4. feat: 修改util.snakeCase函数逻辑
 5. style: 优化代码样式，主要修复tslint错误
+
+#### 0.0.23
+1. feat: 修改导出Schema导出方式为 `export { Schema } from '@forzoom/schema'`
+2. feat: 添加ts使用的RuntimeType函数用于装饰
